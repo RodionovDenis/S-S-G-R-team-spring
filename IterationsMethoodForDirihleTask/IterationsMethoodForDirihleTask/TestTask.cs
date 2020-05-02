@@ -32,6 +32,8 @@ namespace IterationsMethoodForDirihleTask
         public int N = 0; //количество проведенных шагов
         public double eps = 0; //погрешность метода 
 
+        public double xmax = 0; //максимальное отклонение по X
+        public double ymax = 0; //максимальное отклонение по Y
         public TestTask(double a_, double b_, double c_, double d_,
             int n_, int m_, int Nmax_, double Epsmax_, double[,] V_, double[,] r_)
         {
@@ -81,22 +83,18 @@ namespace IterationsMethoodForDirihleTask
             for (int i = 0; i < n + 1; i++)
             {
                 V[0, i] = m3(a + i * h);
-                r[0, i] = 0;
             }
             for (int i = 0; i < n + 1; i++)
             {
                 V[m, i] = m4(a + i * h);
-                r[m, i] = 0;
             }
             for (int j = 0; j < m + 1; j++)
             {
                 V[j, 0] = m1(c + j * k);
-                r[j, 0] = 0;
             }
             for (int j = 0; j < m + 1; j++)
             {
                 V[j, n] = m2(c + j * k);
-                r[j, n] = 0;
             }
             for (int j = 1; j < m; j++)
                 for (int i = 1; i < n; i++)
@@ -281,13 +279,32 @@ namespace IterationsMethoodForDirihleTask
                 {
                     double value = Math.Abs(this.V[j, i] - ftest(a + i * h, c + j * k));
                     if (value > errormax)
+                    {
                         errormax = value;
+                        xmax = a + i * h;
+                        ymax = c + j * k;
+                    }
                 }
             return errormax;
         }
         public double OptimumOmega()
         {
             return 2.0 / (1.0 + 2 * Math.Abs(Math.Sin(Math.PI * h / 2.0)));
+        }
+        public double GetResidual()
+        {
+            double h2 = 1d / (h * h);
+            double k2 = 1d / (k * k);
+            double A = -2 * (h2 + k2);
+            double rmax = 0; //максимальная невязка
+            for (int j = 1; j < m; j++)
+                for (int i = 1; i < n; i++)
+                {
+                    double accuracy = Math.Abs(A * V[j, i] + h2 * (V[j, i - 1] + V[j, i + 1]) + k2 * (V[j - 1, i] + V[j + 1, i]) + f(a + i * h, c + j * k));
+                    if (accuracy > rmax)
+                        rmax = accuracy;
+                }
+            return rmax;
         }
     }
 }

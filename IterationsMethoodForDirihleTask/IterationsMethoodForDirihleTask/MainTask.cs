@@ -33,6 +33,9 @@ namespace IterationsMethoodForDirihleTask
         public int N = 0; //количество проведенных шагов
         public double eps = 0; //погрешность метода 
 
+        public double xmax = 0; //максимальная ошибка в точке Х
+        public double ymax = 0; //максимальная ошибка в точке У
+
         public MainTask(double a_, double b_, double c_, double d_,
             int n_, int m_, int Nmax_, double Epsmax_, double [,] V_, double [,] r_)
         {
@@ -206,7 +209,7 @@ namespace IterationsMethoodForDirihleTask
                 {
                     for (int j = 1; j < n; j++)
                     {
-                        r[i - 1, j - 1] = A * V[i, j] + h2 * V[i, j + 1] + h2 * V[i, j - 1] + k2 * V[i + 1, j] + k2 * V[i - 1, j] + f(j * h, i * k);
+                        r[i - 1, j - 1] = A * V[i, j] + h2 * (V[i, j + 1] + V[i, j - 1]) + k2 * (V[i + 1, j] + V[i - 1, j]) + f(a + j * h, c + i * k);
                     }
                 }
                 double tau = ReturnParametrs(r);
@@ -215,7 +218,7 @@ namespace IterationsMethoodForDirihleTask
                     for (int j = 1; j < n; j++)
                     {
                         double v_old = V[i, j];
-                        double v_new = V[i, j] - (tau * r[i-1, j-1]);
+                        double v_new = V[i, j] - (tau * r[i - 1, j - 1]);
                         double eps_cur = Math.Abs(v_old - v_new);
                         if (eps_cur > eps)
                         {
@@ -256,7 +259,7 @@ namespace IterationsMethoodForDirihleTask
                         {
                             eps = eps_cur;
                         }
-                        V[i,j] = u_new;
+                        V[i,j] = u_new; 
                     }
                 }
                 if ((eps < Epsmax) || (N >= Nmax))
@@ -273,13 +276,32 @@ namespace IterationsMethoodForDirihleTask
                 {
                     double value = Math.Abs(this.V[j, i] - maintask.V[2 * j, 2 * i]);
                     if (value > errormax)
+                    {
                         errormax = value;
+                        xmax = a + i * h;
+                        ymax = c + j * k;
+                    }
                 }
             return errormax;
         }
         public double OptimumOmega()
         {
             return 2.0 / (1.0 + 2 * Math.Abs(Math.Sin(Math.PI * h / 2.0)));
+        }
+        public double GetResidual()
+        {
+            double h2 = 1d / (h * h);
+            double k2 = 1d / (k * k);
+            double A = -2 * (h2 + k2);
+            double rmax = 0; //максимальная невязка
+            for (int j = 1; j < m; j++)
+                for (int i = 1; i < n; i++)
+                {
+                    double accuracy = Math.Abs(A * V[j, i] + h2 * (V[j, i - 1] + V[j, i + 1]) + k2 * (V[j - 1, i] + V[j + 1, i]) + f(a + i * h, c + j * k));
+                    if (accuracy > rmax)
+                        rmax = accuracy;
+                }
+            return rmax;
         }
     }
 }

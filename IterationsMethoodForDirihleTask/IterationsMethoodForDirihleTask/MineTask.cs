@@ -24,9 +24,13 @@ namespace IterationsMethoodForDirihleTask
         private double Epsmax; //точность итерационного метода
 
         public double[,] V; // для решения
+        public double[,] r; //для невязки
 
         public int N = 0; //количество проведенных шагов
         public double eps = 0; //погрешность метода 
+
+        public double xmax = 0; //максимальная ошибка в точке Х
+        public double ymax = 0; //максимальная ошибка в точке Y;
 
         public MineTask(double a_, double b_, double c_, double d_,
             int n_, int m_, int Nmax_, double Epsmax_, double[,] V_)
@@ -175,9 +179,36 @@ namespace IterationsMethoodForDirihleTask
                         continue;
                     double value = Math.Abs(this.V[j, i] - ftest(a + i * h, c + j * k));
                     if (value > errormax)
+                    {
                         errormax = value;
+                        xmax = a + i * h;
+                        ymax = c + j * k;
+                    }
                 }
             return errormax;
+        }
+        public double GetResidual()
+        {
+            double h2 = 1d / (h * h);
+            double k2 = 1d / (k * k);
+            double A = -2 * (h2 + k2);
+            double accuracy;
+
+            double rmax = 0; //максимальная невязка
+            for (int j = 1; j < m; j++)
+                for (int i = 1; i < n; i++)
+                {
+                    if ((m * 0.25 <= j && j <= 3 * m * 0.25) && (n * 0.25 <= i && i <= 3 * n * 0.25))
+                        continue;
+                    else if ((m * 0.5 <= j && j <= 3 * m * 0.25) && (3 * n * 0.25 <= i))
+                        continue;
+                    else if (3 * m * 0.25 <= j && i >= n * 0.5)
+                        continue;
+                    accuracy = Math.Abs(A * V[j, i] + h2 * (V[j, i - 1] + V[j, i + 1]) + k2 * (V[j - 1, i] + V[j + 1, i]) + f(a + i * h, c + j * k));
+                    if (accuracy > rmax)
+                        rmax = accuracy;
+                }
+            return rmax;
         }
 
     }

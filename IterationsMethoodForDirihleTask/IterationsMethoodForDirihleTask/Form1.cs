@@ -82,6 +82,8 @@ namespace IterationsMethoodForDirihleTask
                 label9.Text = "Для решения на сетке 2n потребовалось N = " + Convert.ToString(t2main.N) + " итераций";
                 label11.Text = " = " + Convert.ToString(tmain.GetEpsMax(t2main));
                 label12.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label28.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label30.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 if (comboBox3.SelectedIndex == 2)
                 {
                     label10.Text += " (" + Convert.ToString(omega) + ")";
@@ -99,6 +101,8 @@ namespace IterationsMethoodForDirihleTask
                 label9.Text = "Для решения на сетке 2n потребовалось N = " + Convert.ToString(t2main.N) + " итераций";
                 label11.Text = " = " + Convert.ToString(tmain.GetEpsMax(t2main));
                 label12.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label28.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label30.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 if (comboBox3.SelectedIndex == 2)
                 {
                     label10.Text += " (" + Convert.ToString(omega) + ")";
@@ -116,6 +120,8 @@ namespace IterationsMethoodForDirihleTask
                 label9.Text = "Для решения на сетке 2n потребовалось N = " + Convert.ToString(t2main.N) + " итераций";
                 label11.Text = " = " + Convert.ToString(tmain.GetEpsMax(t2main));
                 label12.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label28.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label30.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 if (comboBox3.SelectedIndex == 2)
                 {
                     label10.Text += " (" + Convert.ToString(omega) + ")";
@@ -150,7 +156,7 @@ namespace IterationsMethoodForDirihleTask
             double k = 2.0 / m;
 
             double[,] Vtest = new double[m + 1, n + 1];
-            double[,] rtest = new double[m + 1, n + 1];
+            double[,] rtest = new double[m - 1, n - 1];
 
             TestTask tmain = new TestTask(0, 1, 0, 2, n, m, NMAX, EPSMAX, Vtest, rtest); //для сетки n
             //заполнение таблицы, таблица - координатная плоскость
@@ -162,7 +168,7 @@ namespace IterationsMethoodForDirihleTask
                     for (int i = 0; i < n + 1; i++)
                         dataGridView1.Rows[n - j].Cells[i].Value = tmain.ftest(i * h, j * k);
                 label10.Text = ""; label9.Text = "В таблице показаны точные значения тестовой задачи";
-                label11.Text = ""; label12.Text = "";
+                label11.Text = ""; label12.Text = ""; label28.Text = ""; label30.Text = "";
                 pictureBox2.Visible = false;
             }
             else if (comboBox2.SelectedIndex == 1)
@@ -190,6 +196,8 @@ namespace IterationsMethoodForDirihleTask
                 label9.Text = "";
                 label11.Text = " = " + Convert.ToString(tmain.GetEpsMax());
                 label12.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label28.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label30.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 pictureBox2.Visible = true;
             }
             else
@@ -217,6 +225,8 @@ namespace IterationsMethoodForDirihleTask
                 label9.Text = "";
                 label11.Text = " = " + Convert.ToString(tmain.GetEpsMax());
                 label12.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label28.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label30.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 pictureBox2.Visible = true;
             }
 
@@ -309,7 +319,7 @@ namespace IterationsMethoodForDirihleTask
                             dataGridView2.Rows[n - j].Cells[i].Value = tmain.ftest(i * h, j * k);
                     }
                 label22.Text = ""; label23.Text = "В таблице показаны точные значения тестовой задачи";
-                label11.Text = ""; label27.Text = "";
+                label11.Text = ""; label27.Text = ""; label29.Text = ""; label31.Text = "";
                 pictureBox4.Visible = false;
             }
             else if (comboBox5.SelectedIndex == 1)
@@ -338,6 +348,8 @@ namespace IterationsMethoodForDirihleTask
                 label23.Text = "Для решения потребовалось N = " + Convert.ToString(tmain.N) + " итераций";
                 label27.Text = " = " + Convert.ToString(tmain.GetEpsMax());
                 label22.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label29.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label31.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 pictureBox4.Visible = true;
             }
             else
@@ -366,11 +378,28 @@ namespace IterationsMethoodForDirihleTask
                 label23.Text = "Для решения потребовалось N = " + Convert.ToString(tmain.N) + " итераций";
                 label27.Text = " = " + Convert.ToString(tmain.GetEpsMax());
                 label22.Text = "Достигнутая погрешность итерационного метода eps = " + Convert.ToString(tmain.eps);
+                label29.Text = " в точке x = " + Convert.ToString(tmain.xmax) + " y = " + Convert.ToString(tmain.ymax);
+                label31.Text = "Невязка по норме бесконечность: " + Convert.ToString(tmain.GetResidual());
                 pictureBox4.Visible = true;
             }
 
         }
         private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label30_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label28_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
         {
 
         }
